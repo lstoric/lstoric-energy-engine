@@ -1,0 +1,29 @@
+# Environments and Caches
+airflow-venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Airflow specific
+airflow.cfg
+airflow.db
+webserver_config.py
+logs/
+airflow-webserver.pid
+
+# dbt specific
+lstoric_transform/target/
+lstoric_transform/dbt_packages/
+lstoric_transform/logs/
+
+# Terraform specific
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.tfstate.lock.info
+
+# Secrets and Keys (CRITICAL)
+.env
+*.pem
+*.key
+credentials
