@@ -1,8 +1,8 @@
-# ⚡ European Energy Grid & Pricing Engine
+#  European Energy Grid & Pricing Engine
 
 An end-to-end Modern Data Stack (MDS) pipeline built to extract, load, and transform live European weather conditions and energy market pricing. This project demonstrates a fully automated ELT architecture using Infrastructure as Code (IaC), cloud data warehousing, and dbt modeling.
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 The pipeline operates on an hourly schedule to correlate weather patterns (temperature, windspeed) with the live Awattar energy market prices in Germany.
 
@@ -13,7 +13,7 @@ The pipeline operates on an hourly schedule to correlate weather patterns (tempe
 5. **Transformation:** dbt Core (Medallion Architecture: Raw -> Staging -> Mart)
 6. **Infrastructure as Code:** Terraform (AWS S3 & IAM provisioning)
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 lstoric-energy-engine/
@@ -29,8 +29,9 @@ lstoric-energy-engine/
 │   └── macros/
 │       └── load_s3.sql          # Triggers Snowflake COPY INTO commands
 └── README.md
+```
 
-Key Engineering Highlights
+# Key Engineering Highlights
 Corporate Network Bypass: Overcame standard urllib 502 Bad Gateway blocks by implementing requests with disguised Chrome User-Agent headers.
 
 Secure Cloud Ingestion: Avoided hardcoded IAM keys by building a keyless Snowflake Storage Integration utilizing AWS IAM Roles and Trust Policies.
@@ -39,7 +40,7 @@ Schema-on-Read JSON Parsing: Utilized Snowflake's VARIANT column type to ingest 
 
 Unified Orchestration: Eliminated competing schedulers (Snowflake Tasks vs. Airflow) by wrapping Snowflake COPY INTO commands inside dbt macros, allowing Airflow's BashOperator to natively orchestrate the entire ELT chain.
 
-⚙️ Setup & Execution
+# Setup & Execution
 Deploy AWS infrastructure using Terraform: cd terraform && terraform init && terraform apply
 
 Configure Snowflake Storage Integration using the generated AWS Role ARN.
