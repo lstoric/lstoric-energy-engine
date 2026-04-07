@@ -27,3 +27,4 @@ lstoric_transform/logs/
 *.pem
 *.key
 credentials
+standalone_admin_password.txt
