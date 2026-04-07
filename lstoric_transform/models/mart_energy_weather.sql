@@ -1,5 +1,4 @@
 WITH weather AS (
-    -- Look at the magic ref() function here!
     SELECT * FROM {{ ref('stg_weather') }}
 ),
 

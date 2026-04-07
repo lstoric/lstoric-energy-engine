@@ -22,7 +22,7 @@ def extract_weather_data():
     unique_id = int(time.time())
     file_name = f"raw_data/weather/weather_frankfurt_{unique_id}.json"
     s3.put_object(Bucket=S3_BUCKET, Key=file_name, Body=json.dumps(response.json()))
-    print(f"✅ Weather data saved to S3")
+    print(f"Weather data saved to S3")
 
 def extract_energy_price():
     url = "https://api.awattar.de/v1/marketdata"
@@ -33,7 +33,7 @@ def extract_energy_price():
     unique_id = int(time.time())
     file_name = f"raw_data/pricing/awattar_germany_{unique_id}.json"
     s3.put_object(Bucket=S3_BUCKET, Key=file_name, Body=json.dumps(response.json()))
-    print(f"✅ Pricing data saved to S3")
+    print(f"Pricing data saved to S3")
 
 default_args = {
     'owner': 'lstoric',
@@ -51,24 +51,22 @@ with DAG(
     catchup=False
 ) as dag:
 
-    # 1. EXTRACT (Python)
+    # 1. EXTRACT 
     fetch_weather = PythonOperator(task_id='extract_live_weather', python_callable=extract_weather_data)
     fetch_price = PythonOperator(task_id='extract_energy_price', python_callable=extract_energy_price)
 
-    # 2. LOAD (dbt macro triggering Snowflake COPY INTO)
-    # We must explicitly tell Airflow to run this from inside the dbt project folder
+    # 2. LOAD 
     load_to_snowflake = BashOperator(
         task_id='load_s3_to_snowflake',
         bash_command='cd ~/lstoric-energy-engine/lstoric_transform && dbt run-operation load_s3_data'
     )
 
-    # 3. TRANSFORM (dbt run)
+    # 3. TRANSFORM 
     transform_data = BashOperator(
         task_id='run_dbt_models',
         bash_command='cd ~/lstoric-energy-engine/lstoric_transform && dbt run'
     )
 
     # THE ORCHESTRATION GRAPH
-    # Both extractions happen at the same time. Once BOTH finish, Load begins. Once Load finishes, Transform begins.
     [fetch_weather, fetch_price] >> load_to_snowflake >> transform_data
 

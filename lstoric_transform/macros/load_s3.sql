@@ -14,5 +14,5 @@
     {% do run_query(weather_query) %}
     {% do run_query(pricing_query) %}
     
-    {{ log("✅ S3 Data successfully loaded into Snowflake RAW tables!", info=True) }}
+    {{ log("S3 Data successfully loaded into Snowflake RAW tables!", info=True) }}
 {% endmacro %}

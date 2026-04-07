@@ -9,12 +9,12 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "eu-central-1" # Frankfurt region
+  region = "eu-central-1" 
 }
 
 # 1. Create the Data Lake S3 Bucket
 resource "aws_s3_bucket" "energy_data_lake" {
-  bucket = "lstoric-energy-data-lake-prod" # Must be globally unique
+  bucket = "smart-meter-raw-data-luka-frankfurt" 
 }
 
 # 2. Define the IAM Policy for Snowflake to read the bucket
