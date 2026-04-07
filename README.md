@@ -1,8 +1,8 @@
-# ⚡ European Energy Grid & Pricing Engine
+#  European Energy Grid & Pricing Engine
 
 An end-to-end Modern Data Stack (MDS) pipeline built to extract, load, and transform live European weather conditions and energy market pricing. This project demonstrates a "Dual-Engine" architecture, utilizing both a Cloud Data Warehouse (Snowflake) for structured analytics and a Data Lakehouse (Databricks) for predictive modeling.
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 The pipeline operates on an hourly schedule to correlate weather patterns (temperature, windspeed) with the live Awattar energy market prices in Germany.
 
@@ -14,7 +14,7 @@ The pipeline operates on an hourly schedule to correlate weather patterns (tempe
 6. **Data Lakehouse & ML (Engine 2):** Databricks Serverless (PySpark schema-on-read & predictive price volatility analysis)
 7. **Infrastructure as Code:** Terraform (AWS S3 & IAM provisioning)
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 lstoric-energy-engine/
