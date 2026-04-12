@@ -4,3 +4,4 @@ SELECT
     json_data:data[0]:end_timestamp::number AS block_end_unix,
     json_data:data[0]:marketprice::float AS market_price_mwh
 FROM lstoric_energy_db.raw.raw_pricing
+QUALIFY ROW_NUMBER() OVER(PARTITION BY DATE_TRUNC('hour', block_start_unix) ORDER BY ingested_at DESC) = 1

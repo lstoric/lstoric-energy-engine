@@ -13,4 +13,4 @@ SELECT
     p.market_price_mwh
 FROM weather w
 JOIN pricing p 
-    ON DATE_TRUNC('hour', w.ingested_at) = DATE_TRUNC('hour', p.ingested_at)
+    ON DATE_TRUNC('hour', w.observed_time) = DATE_TRUNC('hour', p.block_start_unix)
