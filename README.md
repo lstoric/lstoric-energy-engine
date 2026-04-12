@@ -54,5 +54,4 @@ lstoric-energy-engine/
 3. Launch the BI Dashboard: `source airflow-venv/bin/activate && streamlit run dashboard.py`
 
 ## Author
-Luka Storic
- Data Engineer
+Luka Storic, *Data Engineer*
