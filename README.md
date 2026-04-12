@@ -1,23 +1,27 @@
-#  European Energy Grid & Pricing Engine
+# European Energy Grid & Pricing Engine
 
-An end-to-end Modern Data Stack (MDS) pipeline built to extract, load, and transform live European weather conditions and energy market pricing. This project demonstrates a "Dual-Engine" architecture, utilizing both a Cloud Data Warehouse (Snowflake) for structured analytics and a Data Lakehouse (Databricks) for predictive modeling.
+An end-to-end Modern Data Stack (MDS) pipeline built to extract, load, and transform live European weather conditions and energy market pricing. This project demonstrates a "Dual-Engine" architecture utilizing a Cloud Data Warehouse (Snowflake) and a Data Lakehouse (Databricks), complete with automated CI/CD and an interactive BI dashboard.
 
-##  Architecture Overview
+## Architecture Overview
 
 The pipeline operates on an hourly schedule to correlate weather patterns (temperature, windspeed) with the live Awattar energy market prices in Germany.
 
-1. **Orchestration:** Apache Airflow (running locally via WSL)
-2. **Extraction:** Python (`requests` library with header spoofing to bypass enterprise firewalls)
-3. **Data Lake:** AWS S3 (Raw JSON landing zone)
-4. **Data Warehouse (Engine 1):** Snowflake (Secure ingestion via AWS IAM Storage Integration)
-5. **Transformation:** dbt Core (Medallion Architecture: Raw -> Staging -> Mart)
-6. **Data Lakehouse & ML (Engine 2):** Databricks Serverless (PySpark schema-on-read & predictive price volatility analysis)
-7. **Infrastructure as Code:** Terraform (AWS S3 & IAM provisioning)
+1. **Infrastructure as Code:** Terraform (AWS S3 & IAM provisioning)
+2. **Orchestration:** Apache Airflow (running locally via WSL)
+3. **Extraction:** Python (`requests` library with header spoofing to bypass enterprise firewalls)
+4. **Data Lake:** AWS S3 (Raw JSON landing zone)
+5. **Data Warehouse:** Snowflake (Secure ingestion via AWS IAM Storage Integration)
+6. **Transformation:** dbt Core (Medallion Architecture: Raw -> Staging -> Mart)
+7. **Business Intelligence:** Streamlit (Interactive web dashboard visualizing Snowflake Gold Layer data)
+8. **Data Lakehouse / ML:** Databricks Serverless (PySpark schema-on-read & predictive analytics)
+9. **CI/CD Automation:** GitHub Actions (Automated Python linting and DAG code-quality checks)
 
-##  Project Structure
+## Project Structure
 
 ```text
 lstoric-energy-engine/
+├── .github/workflows/
+│   └── data_pipeline_ci.yml     # CI/CD Pipeline (GitHub Actions)
 ├── dags/
 │   └── energy_pipeline.py       # Master Airflow DAG (Extract -> Load -> Transform)
 ├── terraform/
@@ -29,27 +33,26 @@ lstoric-energy-engine/
 │   │   └── mart_energy_weather.sql # Gold layer: Joins weather & pricing
 │   └── macros/
 │       └── load_s3.sql          # Triggers Snowflake COPY INTO commands
+├── dashboard.py                 # Streamlit BI Web Application
 ├── Energy_Price_Predictor.ipynb # Databricks PySpark & ML Volatility Notebook
 └── README.md
 ```
-# Key Engineering Highlights
-Dual-Engine Analytics: Engineered a hybrid data platform utilizing Snowflake/dbt for batch financial reporting and Databricks/PySpark for unstructured Big Data processing and Machine Learning preparation.
 
-Serverless Egress Bypass: Overcame strict Databricks Free Edition network egress firewalls (which block standard Boto3 API calls) by routing raw JSON data through Databricks Volumes for localized PySpark ingestion.
+## Key Engineering Highlights
 
-Corporate Network Bypass: Overcame standard urllib 502 Bad Gateway blocks by implementing requests with disguised Chrome User-Agent headers.
+* **Automated CI/CD Pipelines:** Implemented GitHub Actions to automatically run `flake8` syntax and complexity checks on all Apache Airflow DAGs prior to merging, ensuring pipeline stability.
+* **Interactive Business Intelligence:** Engineered a Streamlit web application to serve as the presentation layer, allowing business stakeholders to easily interact with market volatility metrics derived from the Snowflake Gold Layer.
+* **Dual-Engine Analytics:** Engineered a hybrid data platform utilizing Snowflake/dbt for batch financial reporting and Databricks/PySpark for unstructured Big Data processing.
+* **Serverless Egress Bypass:** Overcame strict Databricks network egress firewalls by routing raw JSON data through Databricks Volumes for localized PySpark ingestion.
+* **Corporate Network Bypass:** Overcame standard `urllib` 502 Bad Gateway blocks by implementing `requests` with disguised Chrome User-Agent headers.
+* **Secure Cloud Ingestion:** Avoided hardcoded IAM keys by building a keyless Snowflake Storage Integration utilizing AWS IAM Roles and Trust Policies.
 
-Secure Cloud Ingestion: Avoided hardcoded IAM keys by building a keyless Snowflake Storage Integration utilizing AWS IAM Roles and Trust Policies.
+## Setup and Execution
 
-Unified Orchestration: Eliminated competing schedulers by wrapping Snowflake COPY INTO commands inside dbt macros, allowing Airflow's BashOperator to natively orchestrate the entire ELT chain.
+1. Deploy AWS infrastructure: `cd terraform && terraform init && terraform apply`
+2. Start the local Airflow server: `source airflow-venv/bin/activate && AIRFLOW_HOME=~/lstoric-energy-engine airflow standalone`
+3. Launch the BI Dashboard: `source airflow-venv/bin/activate && streamlit run dashboard.py`
 
-# Setup & Execution
-Deploy AWS infrastructure using Terraform: cd terraform && terraform init && terraform apply
-
-Configure Snowflake Storage Integration using the generated AWS Role ARN.
-
-Start the local Airflow server: AIRFLOW_HOME=~/lstoric-energy-engine airflow standalone
-
-Unpause the european_energy_extraction DAG in the Airflow UI to begin hourly ingestion.
-
-(Optional) Import Energy_Price_Predictor.ipynb into Databricks to visualize market volatility.
+## Author
+Luka Storic
+ Data Engineer
